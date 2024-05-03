@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="home_tab_icon">
+        <item>@drawable/ic_search</item>
+        <item>@drawable/ic_bookmark_normal</item>
+    </array>
+</resources>
