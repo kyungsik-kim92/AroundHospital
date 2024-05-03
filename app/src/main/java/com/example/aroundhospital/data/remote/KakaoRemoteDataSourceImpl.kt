@@ -1,11 +1,12 @@
-package com.example.hospitalfinder.data.source.remote
+package com.example.aroundhospital.data.remote
 
 
 import com.example.aroundhospital.KakaoService
 import com.example.aroundhospital.response.KakaoSearchResponse
 import retrofit2.Response
+import javax.inject.Inject
 
-class KakaoRemoteDataSourceImpl (private val kakaoService: KakaoService) :
+class KakaoRemoteDataSourceImpl @Inject constructor(private val kakaoService: KakaoService) :
     KakaoRemoteDataSource {
 
 
