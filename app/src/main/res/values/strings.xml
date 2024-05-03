@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AroundHospital</string>
+    <string name="fab_current_location">CurrentLocation</string>
 </resources>
