@@ -51,6 +51,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(files ("libs/libDaumMapAndroid.jar"))
+
     implementation(libs.play.services.location)
 
     implementation(libs.retrofit)
