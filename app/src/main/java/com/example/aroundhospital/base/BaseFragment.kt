@@ -28,7 +28,7 @@ abstract class BaseFragment<B : ViewDataBinding>(@LayoutRes private val layoutId
     ): View? {
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         binding.lifecycleOwner = this
-        binding.setVariable(BR, viewModel)
+        binding.setVariable(BR.viewModel, viewModel)
         initUi()
         viewModel.viewState.map(::onChangedViewState).launchIn(viewLifecycleOwner.lifecycleScope)
         viewModel.viewEvent.map(::onChangeViewEvent).launchIn(viewLifecycleOwner.lifecycleScope)
