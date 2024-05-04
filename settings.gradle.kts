@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 rootProject.name = "AroundHospital"
 include(":app")
 include(":domain")
+include(":data")
