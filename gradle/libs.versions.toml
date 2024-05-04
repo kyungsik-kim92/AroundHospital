@@ -1,6 +1,7 @@
 [versions]
 activityKtx = "1.9.0"
 agp = "8.3.0"
+android = "2.9.5"
 fragmentKtx = "1.7.0"
 hiltAndroid = "2.48.1"
 kotlin = "1.9.0"
@@ -23,6 +24,7 @@ roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
 
 [libraries]
+android = { module = "com.kakao.maps.open:android", version.ref = "android" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
