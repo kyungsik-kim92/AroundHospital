@@ -17,12 +17,13 @@ fun Fragment.routeHomeFragment() {
     findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
 }
 
-fun View.hidePOIInfoContainer(context : Context) {
+fun View.hidePOIInfoContainer(context: Context) {
+    if (this.visibility == View.GONE) return
     this.visibility = View.GONE
     this.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_down))
 }
 
-fun View.showPOIInfoContainer(context : Context) {
+fun View.showPOIInfoContainer(context: Context) {
     this.visibility = View.VISIBLE
     this.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_up))
 }
