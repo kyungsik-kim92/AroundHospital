@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
 import android.location.Location
+import com.example.aroundhospital.Result
 import com.example.aroundhospital.hasPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -11,9 +12,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import net.daum.mf.map.api.MapPoint
 import javax.inject.Inject
-import com.example.aroundhospital.Result
 
 class GetCurrentLocationUseCase @Inject constructor(
     private val application: Application
@@ -36,7 +35,7 @@ class GetCurrentLocationUseCase @Inject constructor(
                 cancellationTokenSource.token
             )
             currentLocationTask.addOnSuccessListener {
-                trySend(Result.Success(it.toMapPoint()))
+                trySend(Result.Success(it.toLatLng()))
             }.addOnFailureListener {
                 trySend(Result.Error(it))
                 close(it)
@@ -50,8 +49,10 @@ class GetCurrentLocationUseCase @Inject constructor(
             cancellationTokenSource.cancel()
         }
     }
+
+    private fun Location.toLatLng() =
+        com.kakao.vectormap.LatLng.from(latitude, longitude)
 }
 
-private fun Location.toMapPoint(): MapPoint =
-    MapPoint.mapPointWithGeoCoord(latitude, longitude)
+
 
