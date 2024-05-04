@@ -1,17 +1,20 @@
 package com.example.aroundhospital.map
 
 import androidx.lifecycle.viewModelScope
-import com.example.aroundhospital.MapViewEventType
-import com.example.aroundhospital.MapXY
-import com.example.aroundhospital.POIItemEventType
 import com.example.aroundhospital.Result
 import com.example.aroundhospital.base.BaseViewModel
 import com.example.aroundhospital.data.repo.BookmarkRepository
+import com.example.aroundhospital.domain.manager.KakaoMapCameraEvent
+import com.example.aroundhospital.domain.manager.KakaoMapEvent
+import com.example.aroundhospital.domain.manager.KakaoMapLabelEvent
+import com.example.aroundhospital.domain.manager.KakaoMapLifeCycleCallbackEvent
+import com.example.aroundhospital.domain.manager.KakaoMapReadyCallbackEvent
+import com.example.aroundhospital.domain.usecase.GetCurrentLocationUseCase
+import com.example.aroundhospital.domain.usecase.GetHospitalsUseCase
 import com.example.aroundhospital.response.Document
-import com.example.aroundhospital.response.toMapPOIItem
-import com.example.aroundhospital.toMapXY
-import com.example.aroundhospital.usecase.GetCurrentLocationUseCase
-import com.example.aroundhospital.usecase.GetHospitalsUseCase
+import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.Label
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -27,8 +30,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
 import javax.inject.Inject
 
 
@@ -41,10 +42,6 @@ class MapViewModel @Inject constructor(
 
     val isBookmarkStateFlow = MutableStateFlow(false)
 
-    private var currentMapCenterPoint: MapPoint? = null
-
-    private val cacheMapPOIItemList = mutableSetOf<MapPOIItem>()
-
     private val isCheckBookmark: (Document) -> Flow<Boolean> = { document ->
         bookmarkRepository.getAll.map {
             it.any { bookmark -> bookmark.id == document.id }
@@ -52,14 +49,11 @@ class MapViewModel @Inject constructor(
     }
 
     private val mapCenterChannel =
-        Channel<MapXY>(capacity = Channel.UNLIMITED, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+        Channel<LatLng>(capacity = Channel.UNLIMITED, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     init {
-        moveCurrentLocation()
-        mapCenterChannel.receiveAsFlow().debounce(SEARCH_DEBOUNCE_TIME).map {
-            search(it.x, it.y)
-        }.launchIn(viewModelScope)
-
+        mapCenterChannel.receiveAsFlow().debounce(SEARCH_DEBOUNCE_TIME).map(::search)
+            .launchIn(viewModelScope)
 
     }
 
@@ -75,17 +69,20 @@ class MapViewModel @Inject constructor(
                 }
 
                 is Result.Success -> {
-                    currentMapCenterPoint = result.data
+                    val cameraUpdate = CameraUpdateFactory.newCenterPosition(result.data)
+                    onChangedViewEvent(MapViewEvent.MoveCamera(cameraUpdate))
                     onChangedViewEvent(MapViewEvent.HideProgress)
-                    onChangedViewState(MapViewState.MoveMapCenter(result.data))
                 }
             }
         }.launchIn(viewModelScope)
     }
 
 
-    private fun search(x: String, y: String) {
-        getHospitalsUseCase(x, y).onEach { result ->
+    private fun search(latLng: LatLng) {
+        getHospitalsUseCase(
+            latLng.longitude.toString(),
+            latLng.latitude.toString()
+        ).onEach { result ->
             when (result) {
                 Result.Loading -> {
                     onChangedViewEvent(MapViewEvent.ShowProgress)
@@ -96,15 +93,8 @@ class MapViewModel @Inject constructor(
                 }
 
                 is Result.Success -> {
-
-                    val newItemList = result.data.filter {
-                        it.id !in cacheMapPOIItemList.map { it.userObject as Document }
-                            .map { it.id }
-                    }.map { it.toMapPOIItem() }
-
-                    cacheMapPOIItemList.addAll(newItemList)
+                    onChangedViewEvent(MapViewEvent.GetHospitals(result.data))
                     onChangedViewEvent(MapViewEvent.HideProgress)
-                    onChangedViewState(MapViewState.GetPOIItems(newItemList.toTypedArray()))
                 }
             }
         }.launchIn(viewModelScope)
@@ -119,30 +109,42 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun processMapViewEvent(type: MapViewEventType) {
-        when (type) {
-            MapViewEventType.DragStarted -> {
-                onChangedViewEvent(MapViewEvent.HideMapPOIItemInfo)
+    fun kakaoMapEvent(event: KakaoMapEvent) {
+        when (event) {
+            is KakaoMapLifeCycleCallbackEvent -> processKakaMapLifecycleEvent(event)
+            is KakaoMapReadyCallbackEvent.Ready -> {
+                moveCurrentLocation()
             }
 
-            is MapViewEventType.MapCenterChanged -> {
-                flowOf(type.mapPoint).filterNotNull().map {
-                    mapCenterChannel.trySend(it.toMapXY())
-                }.launchIn(viewModelScope)
-            }
-        }
-    }
-
-    fun processPOIItemEvent(type: POIItemEventType) {
-        when (type) {
-            is POIItemEventType.Selected -> {
-                (type.item?.userObject as? Document)?.let {
+            is KakaoMapLabelEvent.Click -> {
+                (event.label.tag as? Document)?.let {
                     checkBookmarkState(it)
                     onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
                 }
             }
+
+            is KakaoMapCameraEvent.MoveEnd -> {
+                flowOf(event.cameraPosition.position).filterNotNull().map {
+                    mapCenterChannel.trySend(it)
+                }.launchIn(viewModelScope)
+            }
+
+            is KakaoMapCameraEvent.MoveStart -> {
+                isBookmarkStateFlow.value = false
+                onChangedViewEvent(MapViewEvent.HideMapPOIItemInfo)
+            }
         }
     }
+
+    private fun processKakaMapLifecycleEvent(event: KakaoMapLifeCycleCallbackEvent) {
+        when (event) {
+            KakaoMapLifeCycleCallbackEvent.Destroy -> {}
+            is KakaoMapLifeCycleCallbackEvent.Error -> {}
+            KakaoMapLifeCycleCallbackEvent.Paused -> {}
+            KakaoMapLifeCycleCallbackEvent.Resumed -> {}
+        }
+    }
+
 
     private fun checkBookmarkState(item: Document) {
         isCheckBookmark(item).onEach {
@@ -150,20 +152,15 @@ class MapViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun moveItem(item: Document) {
-        if (item in cacheMapPOIItemList.map { it.userObject as Document }) {
-            onChangedViewEvent(MapViewEvent.MoveMap(item.toMapPOIItem().mapPoint))
-            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
-        } else {
-            onChangedViewEvent(MapViewEvent.MoveMap(item.toMapPOIItem().mapPoint))
-            cacheMapPOIItemList.add(item.toMapPOIItem())
-            onChangedViewState(MapViewState.GetPOIItems(arrayOf(item.toMapPOIItem())))
-            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
+    fun moveItem(item: Label?) {
+        (item?.tag as? Document)?.let {
+            checkBookmarkState(it)
+            onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
         }
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_TIME = 1000L
+        private const val SEARCH_DEBOUNCE_TIME = 2000L
     }
 }
 
