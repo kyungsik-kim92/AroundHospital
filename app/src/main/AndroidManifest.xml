@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="5d205f362e46b908c25920b3c0d459ed"/>
+
     </application>
 
 </manifest>
