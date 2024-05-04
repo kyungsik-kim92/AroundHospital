@@ -9,7 +9,10 @@ import com.example.aroundhospital.base.BaseFragment
 import com.example.aroundhospital.base.ViewEvent
 import com.example.aroundhospital.base.ViewState
 import com.example.aroundhospital.databinding.FragmentMapBinding
+import com.example.aroundhospital.hidePOIInfoContainer
+import com.example.aroundhospital.home.HomeViewEvent
 import com.example.aroundhospital.home.HomeViewModel
+import com.example.aroundhospital.showPOIInfoContainer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -51,38 +54,38 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
         }
     }
 
-    override fun onChangeViewEvent(event: ViewEvent) {}}
-//        when (event) {
-//            is MapViewEvent.ShowProgress -> {
-//                binding.progress.isVisible = true
-//            }
-//
-//            is MapViewEvent.HideProgress -> {
-//                binding.progress.isVisible = false
-//            }
-//
-//            is MapViewEvent.ShowMapPOIItemInfo -> {
-//                with(binding) {
-//                    fabCurrentLocation.isVisible = false
-//                    viewMapInfo.item = event.item
-//                    viewMapInfo.root.showPOIInfoContainer(requireContext())
-//                }
-//            }
-//
-//            is MapViewEvent.HideMapPOIItemInfo -> {
-//                with(binding) {
-//                    fabCurrentLocation.isVisible = true
-//                    viewMapInfo.root.hidePOIInfoContainer(requireContext())
-//                }
-//            }
-//
-//            is MapViewEvent.MoveMap -> {
-//                mapView?.setMapCenterPoint(event.mapPoint, true)
-//            }
-//
-//            is HomeViewEvent.MoveItem -> {
-//                viewModel.moveItem(event.item)
-//            }
-//        }
-//    }
+    override fun onChangeViewEvent(event: ViewEvent) {
+        when (event) {
+            is MapViewEvent.ShowProgress -> {
+                binding.progress.isVisible = true
+            }
 
+            is MapViewEvent.HideProgress -> {
+                binding.progress.isVisible = false
+            }
+
+            is MapViewEvent.ShowMapPOIItemInfo -> {
+                with(binding) {
+                    fabCurrentLocation.isVisible = false
+                    viewMapInfo.item = event.item
+                    viewMapInfo.root.showPOIInfoContainer(requireContext())
+                }
+            }
+
+            is MapViewEvent.HideMapPOIItemInfo -> {
+                with(binding) {
+                    fabCurrentLocation.isVisible = true
+                    viewMapInfo.root.hidePOIInfoContainer(requireContext())
+                }
+            }
+
+            is MapViewEvent.MoveMap -> {
+                mapView?.setMapCenterPoint(event.mapPoint, true)
+            }
+
+            is HomeViewEvent.MoveItem -> {
+                viewModel.moveItem(event.item)
+            }
+        }
+    }
+}

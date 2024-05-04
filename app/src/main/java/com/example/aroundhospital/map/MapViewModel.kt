@@ -6,6 +6,7 @@ import com.example.aroundhospital.MapXY
 import com.example.aroundhospital.POIItemEventType
 import com.example.aroundhospital.Result
 import com.example.aroundhospital.base.BaseViewModel
+import com.example.aroundhospital.data.repo.BookmarkRepository
 import com.example.aroundhospital.response.Document
 import com.example.aroundhospital.response.toMapPOIItem
 import com.example.aroundhospital.toMapXY
@@ -15,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
@@ -34,7 +36,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val getHospitalsUseCase: GetHospitalsUseCase,
     private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
-//    private val bookmarkRepository: BookmarkRepository
+    private val bookmarkRepository: BookmarkRepository
 ) : BaseViewModel() {
 
     val isBookmarkStateFlow = MutableStateFlow(false)
@@ -43,11 +45,11 @@ class MapViewModel @Inject constructor(
 
     private val cacheMapPOIItemList = mutableSetOf<MapPOIItem>()
 
-//    private val isCheckBookmark: (Document) -> Flow<Boolean> = { document ->
-//        bookmarkRepository.getAll.map {
-//            it.any { bookmark -> bookmark.id == document.id }
-//        }
-//    }
+    private val isCheckBookmark: (Document) -> Flow<Boolean> = { document ->
+        bookmarkRepository.getAll.map {
+            it.any { bookmark -> bookmark.id == document.id }
+        }
+    }
 
     private val mapCenterChannel =
         Channel<MapXY>(capacity = Channel.UNLIMITED, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -109,13 +111,13 @@ class MapViewModel @Inject constructor(
     }
 
 
-//    fun toggleBookmark(item: Document) = viewModelScope.launch(Dispatchers.IO) {
-//        if (isCheckBookmark(item).first()) {
-//            bookmarkRepository.delete(item)
-//        } else {
-//            bookmarkRepository.insert(item)
-//        }
-//    }
+    fun toggleBookmark(item: Document) = viewModelScope.launch(Dispatchers.IO) {
+        if (isCheckBookmark(item).first()) {
+            bookmarkRepository.delete(item)
+        } else {
+            bookmarkRepository.insert(item)
+        }
+    }
 
     fun processMapViewEvent(type: MapViewEventType) {
         when (type) {
@@ -135,28 +137,28 @@ class MapViewModel @Inject constructor(
         when (type) {
             is POIItemEventType.Selected -> {
                 (type.item?.userObject as? Document)?.let {
-//                    checkBookmarkState(it)
+                    checkBookmarkState(it)
                     onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
                 }
             }
         }
     }
 
-//    private fun checkBookmarkState(item: Document) {
-//        isCheckBookmark(item).onEach {
-//            isBookmarkStateFlow.value = it
-//        }.launchIn(viewModelScope)
-//    }
+    private fun checkBookmarkState(item: Document) {
+        isCheckBookmark(item).onEach {
+            isBookmarkStateFlow.value = it
+        }.launchIn(viewModelScope)
+    }
 
     fun moveItem(item: Document) {
         if (item in cacheMapPOIItemList.map { it.userObject as Document }) {
             onChangedViewEvent(MapViewEvent.MoveMap(item.toMapPOIItem().mapPoint))
-//            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
+            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
         } else {
             onChangedViewEvent(MapViewEvent.MoveMap(item.toMapPOIItem().mapPoint))
             cacheMapPOIItemList.add(item.toMapPOIItem())
             onChangedViewState(MapViewState.GetPOIItems(arrayOf(item.toMapPOIItem())))
-//            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
+            processPOIItemEvent(POIItemEventType.Selected(item.toMapPOIItem()))
         }
     }
 
