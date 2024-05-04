@@ -1,17 +1,8 @@
 package com.example.aroundhospital.map
 
 import com.example.aroundhospital.base.ViewEvent
-import com.example.aroundhospital.base.ViewState
 import com.example.aroundhospital.response.Document
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-
-sealed interface MapViewState : ViewState {
-    data class GetPOIItems(val poiItems: Array<MapPOIItem>) : MapViewState
-
-    data class MoveMapCenter(val mapPoint: MapPoint) : MapViewState
-}
-
+import com.kakao.vectormap.camera.CameraUpdate
 
 sealed interface MapViewEvent : ViewEvent {
     object ShowProgress : MapViewEvent
@@ -21,6 +12,8 @@ sealed interface MapViewEvent : ViewEvent {
 
     object HideMapPOIItemInfo : MapViewEvent
 
-    data class MoveMap(val mapPoint: MapPoint) : MapViewEvent
+    data class MoveCamera(val cameraUpdate: CameraUpdate) : MapViewEvent
+
+    data class GetHospitals(val list: List<Document>) : MapViewEvent
 
 }
