@@ -3,7 +3,7 @@ package com.example.aroundhospital.response
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import net.daum.mf.map.api.MapPOIItem
+import com.kakao.vectormap.label.LabelOptions
 
 @Entity(tableName = "book")
 data class Document(
@@ -34,11 +34,5 @@ data class Document(
     val y: String
 )
 
-fun Document.toMapPOIItem() : MapPOIItem {
-    return MapPOIItem().apply {
-        itemName = place_name
-        mapPoint = net.daum.mf.map.api.MapPoint.mapPointWithGeoCoord(y.toDouble(), x.toDouble())
-        markerType = MapPOIItem.MarkerType.RedPin
-        userObject = this@toMapPOIItem
-    }
-}
+fun Document.toKakaoMapLabelOption(): LabelOptions =
+    LabelOptions.from(id, com.kakao.vectormap.LatLng.from(y.toDouble(), x.toDouble())).setTag(this)
