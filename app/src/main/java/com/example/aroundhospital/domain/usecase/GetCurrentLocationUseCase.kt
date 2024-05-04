@@ -1,4 +1,4 @@
-package com.example.aroundhospital.usecase
+package com.example.aroundhospital.domain.usecase
 
 import android.Manifest
 import android.annotation.SuppressLint

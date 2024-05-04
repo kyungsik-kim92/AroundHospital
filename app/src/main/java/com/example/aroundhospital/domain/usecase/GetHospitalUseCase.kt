@@ -1,4 +1,4 @@
-package com.example.aroundhospital.usecase
+package com.example.aroundhospital.domain.usecase
 
 import com.example.aroundhospital.asResult
 import com.example.aroundhospital.data.repo.KakaoRepository
