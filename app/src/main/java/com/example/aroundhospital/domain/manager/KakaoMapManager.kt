@@ -1,6 +1,6 @@
 package com.example.aroundhospital.domain.manager
 
-import com.example.aroundhospital.response.Document
+import com.example.data.api.response.Document
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.label.Label

@@ -6,9 +6,9 @@ import com.example.aroundhospital.adapter.FragmentPagerAdapter
 import com.example.aroundhospital.base.BaseFragment
 import com.example.aroundhospital.base.ViewEvent
 import com.example.aroundhospital.base.ViewState
-import com.example.aroundhospital.bookmark.BookmarkFragment
+import com.example.aroundhospital.ui.bookmark.BookmarkFragment
 import com.example.aroundhospital.databinding.FragmentHomeBinding
-import com.example.aroundhospital.map.MapFragment
+import com.example.aroundhospital.ui.map.MapFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 

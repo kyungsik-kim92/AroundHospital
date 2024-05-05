@@ -3,12 +3,14 @@ package com.example.aroundhospital.di
 
 import com.example.aroundhospital.data.local.BookmarkLocalDataSource
 import com.example.aroundhospital.data.local.BookmarkLocalDataSourceImpl
-import com.example.aroundhospital.data.remote.KakaoRemoteDataSource
-import com.example.aroundhospital.data.remote.KakaoRemoteDataSourceImpl
+
 import com.example.aroundhospital.data.repo.BookmarkRepository
 import com.example.aroundhospital.data.repo.BookmarkRepositoryImpl
-import com.example.aroundhospital.data.repo.KakaoRepository
-import com.example.aroundhospital.data.repo.KakaoRepositoryImpl
+import com.example.data.repo.KakaoRepositoryImpl
+import com.example.data.source.remote.KakaoRemoteDataSourceImpl
+import com.example.domain.repo.KakaoRepository
+import com.example.domain.source.remote.KakaoRemoteDataSource
+
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

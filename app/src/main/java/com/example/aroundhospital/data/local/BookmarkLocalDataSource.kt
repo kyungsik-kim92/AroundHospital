@@ -1,6 +1,6 @@
 package com.example.aroundhospital.data.local
 
-import com.example.aroundhospital.response.Document
+import com.example.data.api.response.Document
 import kotlinx.coroutines.flow.Flow
 
 interface BookmarkLocalDataSource {

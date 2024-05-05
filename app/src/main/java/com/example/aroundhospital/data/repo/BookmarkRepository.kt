@@ -1,7 +1,7 @@
 package com.example.aroundhospital.data.repo
 
 
-import com.example.aroundhospital.response.Document
+import com.example.data.api.response.Document
 import kotlinx.coroutines.flow.Flow
 
 interface BookmarkRepository {

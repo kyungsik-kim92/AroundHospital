@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.aroundhospital.map.MapViewModel" />
+            type="com.example.aroundhospital.ui.map.MapViewModel" />
 
     </data>
 

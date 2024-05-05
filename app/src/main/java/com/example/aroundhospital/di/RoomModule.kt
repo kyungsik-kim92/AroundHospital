@@ -2,7 +2,7 @@ package com.example.aroundhospital.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.aroundhospital.room.BookmarkDatabase
+import com.example.data.room.BookmarkDatabase
 
 import dagger.Module
 import dagger.Provides

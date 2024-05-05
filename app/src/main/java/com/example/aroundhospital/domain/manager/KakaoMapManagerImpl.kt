@@ -3,8 +3,8 @@ package com.example.aroundhospital.domain.manager
 import com.example.aroundhospital.LabelStyleManager
 import com.example.aroundhospital.LabelStyleType
 import com.example.aroundhospital.base.BaseCoroutineScope
-import com.example.aroundhospital.response.Document
-import com.example.aroundhospital.response.toKakaoMapLabelOption
+import com.example.data.api.response.Document
+import com.example.data.api.response.toKakaoMapLabelOption
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.MapLifeCycleCallback

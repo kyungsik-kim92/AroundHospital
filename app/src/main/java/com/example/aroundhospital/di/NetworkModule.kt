@@ -1,7 +1,7 @@
 package com.example.aroundhospital.di
 
 
-import com.example.aroundhospital.KakaoService
+import com.example.data.api.KakaoService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

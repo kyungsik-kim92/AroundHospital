@@ -1,7 +1,7 @@
 package com.example.aroundhospital.data.local
 
-import com.example.aroundhospital.response.Document
-import com.example.aroundhospital.room.BookmarkDao
+import com.example.data.api.response.Document
+import com.example.data.room.BookmarkDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aroundhospital.databinding.ItemBookmarkBinding
-import com.example.aroundhospital.response.Document
+import com.example.data.api.response.Document
 
 class BookmarkAdapter(private val onItemClick: (Document) -> Unit) :
     ListAdapter<Document, BookmarkAdapter.BookmarkViewHolder>(BookmarkDiffCallback()) {
