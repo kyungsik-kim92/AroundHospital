@@ -8,7 +8,7 @@ import com.example.aroundhospital.base.BaseFragment
 import com.example.aroundhospital.base.ViewEvent
 import com.example.aroundhospital.base.ViewState
 import com.example.aroundhospital.databinding.FragmentMapBinding
-import com.example.aroundhospital.domain.manager.KakaoMapManager
+import com.example.aroundhospital.kakaomap.KakaoMapManager
 import com.example.aroundhospital.hidePOIInfoContainer
 import com.example.aroundhospital.home.HomeViewEvent
 import com.example.aroundhospital.home.HomeViewModel

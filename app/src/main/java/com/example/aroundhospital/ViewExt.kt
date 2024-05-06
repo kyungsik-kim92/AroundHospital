@@ -6,7 +6,8 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.aroundhospital.splash.SplashFragmentDirections
+import com.example.aroundhospital.ui.splash.SplashFragmentDirections
+
 
 fun Fragment.showToast(message: String) {
     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

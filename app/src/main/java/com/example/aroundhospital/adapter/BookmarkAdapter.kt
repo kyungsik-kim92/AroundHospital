@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aroundhospital.databinding.ItemBookmarkBinding
-import com.example.data.api.response.Document
+import com.example.domain.model.KakaoMapInfo
 
-class BookmarkAdapter(private val onItemClick: (Document) -> Unit) :
-    ListAdapter<Document, BookmarkAdapter.BookmarkViewHolder>(BookmarkDiffCallback()) {
+class BookmarkAdapter(private val onItemClick: (KakaoMapInfo) -> Unit) :
+    ListAdapter<KakaoMapInfo, BookmarkAdapter.BookmarkViewHolder>(BookmarkDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
         return BookmarkViewHolder(
@@ -25,7 +25,7 @@ class BookmarkAdapter(private val onItemClick: (Document) -> Unit) :
 
     class BookmarkViewHolder(private val binding: ItemBookmarkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(document: Document, onItemClick: (Document) -> Unit) {
+        fun bind(document: KakaoMapInfo, onItemClick: (KakaoMapInfo) -> Unit) {
             with(binding) {
                 item = document
                 root.setOnClickListener {
@@ -38,12 +38,12 @@ class BookmarkAdapter(private val onItemClick: (Document) -> Unit) :
 
 }
 
-class BookmarkDiffCallback : DiffUtil.ItemCallback<Document>() {
-    override fun areItemsTheSame(oldItem: Document, newItem: Document): Boolean {
+class BookmarkDiffCallback : DiffUtil.ItemCallback<KakaoMapInfo>() {
+    override fun areItemsTheSame(oldItem: KakaoMapInfo, newItem: KakaoMapInfo): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Document, newItem: Document): Boolean {
+    override fun areContentsTheSame(oldItem: KakaoMapInfo, newItem: KakaoMapInfo): Boolean {
         return oldItem == newItem
     }
 }

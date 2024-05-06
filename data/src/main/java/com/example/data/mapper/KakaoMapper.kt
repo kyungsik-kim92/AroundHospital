@@ -23,9 +23,24 @@ fun Document.toKakaoMapInfo() = KakaoMapInfo(
     y
 )
 
+fun KakaoMapInfo.toDocument() = Document(
+    address_name,
+    category_group_code,
+    category_group_name,
+    category_name,
+    distance,
+    id,
+    phone,
+    place_name,
+    place_url,
+    road_address_name,
+    x,
+    y
+)
+
 
 fun Meta.toKakaoSearchMeta() = KakaoSearchMeta(
-    is_end, pageable_count, same_name, total_count
+    is_end, pageable_count, total_count
 )
 
 
