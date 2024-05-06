@@ -3,7 +3,6 @@ package com.example.domain.usecase
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.location.Location
 import com.example.domain.util.ext.Result
 import com.example.domain.util.ext.hasPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -36,7 +35,7 @@ class GetCurrentLocationUseCase @Inject constructor(
                 cancellationTokenSource.token
             )
             currentLocationTask.addOnSuccessListener {
-                trySend(Result.Success(it.toLatLng()))
+                trySend(Result.Success(it))
             }.addOnFailureListener {
                 trySend(Result.Error(it))
                 close(it)
@@ -53,7 +52,5 @@ class GetCurrentLocationUseCase @Inject constructor(
 
 }
 
-private fun Location.toLatLng() =
-    com.kakao.vectormap.LatLng.from(latitude, longitude)
 
 
