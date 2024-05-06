@@ -24,7 +24,7 @@ roomKtx = "2.6.1"
 roomRuntime = "2.6.1"
 
 [libraries]
-android = { module = "com.kakao.maps.open:android", version.ref = "android" }
+kakao-android = { module = "com.kakao.maps.open:android", version.ref = "android" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
