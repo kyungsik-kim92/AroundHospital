@@ -1,4 +1,4 @@
-package com.example.aroundhospital.di
+package com.example.data.di
 
 
 import com.example.data.api.KakaoService

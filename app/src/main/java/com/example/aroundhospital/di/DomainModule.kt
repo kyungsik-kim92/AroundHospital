@@ -1,7 +1,7 @@
 package com.example.aroundhospital.di
 
-import com.example.aroundhospital.domain.manager.KakaoMapManager
-import com.example.aroundhospital.domain.manager.KakaoMapManagerImpl
+import com.example.aroundhospital.kakaomap.KakaoMapManager
+import com.example.aroundhospital.kakaomap.KakaoMapManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
