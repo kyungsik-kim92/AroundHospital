@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookmarkDao {
     @Query("SELECT * FROM book")
-    fun getAll() : Flow<List<KakaoMapInfo>>
+    fun getAll() : Flow<List<Document>>
 
     @Delete
-    fun delete(entity: KakaoMapInfo)
+    fun delete(entity: Document)
 
     // 동일한 자료가 있을시 REPLACE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(entity: KakaoMapInfo)
+    fun insert(entity: Document)
 
     @Update
-    fun update(memo: KakaoMapInfo)
+    fun update(memo: Document)
 }
