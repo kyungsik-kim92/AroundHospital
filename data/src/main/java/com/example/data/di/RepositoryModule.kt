@@ -1,16 +1,14 @@
-package com.example.aroundhospital.di
+package com.example.data.di
 
 
-import com.example.aroundhospital.data.local.BookmarkLocalDataSource
-import com.example.aroundhospital.data.local.BookmarkLocalDataSourceImpl
-
-import com.example.aroundhospital.data.repo.BookmarkRepository
-import com.example.aroundhospital.data.repo.BookmarkRepositoryImpl
+import com.example.data.repo.KakaoBookmarkRepositoryImpl
 import com.example.data.repo.KakaoRepositoryImpl
+import com.example.data.source.local.BookmarkLocalDataSource
+import com.example.data.source.local.BookmarkLocalDataSourceImpl
+import com.example.data.source.remote.KakaoRemoteDataSource
 import com.example.data.source.remote.KakaoRemoteDataSourceImpl
+import com.example.domain.repo.KakaoBookmarkRepository
 import com.example.domain.repo.KakaoRepository
-import com.example.domain.source.remote.KakaoRemoteDataSource
-
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,7 +19,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
-
     @Binds
     @Singleton
     abstract fun provideKakaoRepository(kakaoRepositoryImpl: KakaoRepositoryImpl): KakaoRepository
@@ -29,8 +26,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindBookmarkRepository(
-        bookmarkRepositoryImpl: BookmarkRepositoryImpl
-    ): BookmarkRepository
+        bookmarkRepositoryImpl: KakaoBookmarkRepositoryImpl
+    ): KakaoBookmarkRepository
 
 
     @Binds
