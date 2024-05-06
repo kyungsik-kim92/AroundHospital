@@ -34,5 +34,4 @@ data class Document(
     val y: String
 )
 
-fun Document.toKakaoMapLabelOption(): LabelOptions =
-    LabelOptions.from(id, com.kakao.vectormap.LatLng.from(y.toDouble(), x.toDouble())).setTag(this)
+
