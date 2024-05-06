@@ -1,6 +1,7 @@
-package com.example.aroundhospital.domain.manager
+package com.example.aroundhospital.kakaomap
 
 import com.example.data.api.response.Document
+import com.example.domain.model.KakaoMapInfo
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.label.Label
@@ -10,7 +11,7 @@ interface KakaoMapManager {
 
     val kakaoMapEventFlow: Flow<KakaoMapEvent>
     fun init(mapView: MapView)
-    fun addLabels(items: List<Document>)
+    fun addLabels(items: List<KakaoMapInfo>)
     fun moveCamera(cameraUpdate: CameraUpdate)
-    fun getLabel(item: Document): Label?
+    fun getLabel(item: KakaoMapInfo): Label?
 }

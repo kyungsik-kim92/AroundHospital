@@ -1,4 +1,4 @@
-package com.example.aroundhospital.domain.manager
+package com.example.aroundhospital.kakaomap
 
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap

@@ -1,10 +1,9 @@
-package com.example.aroundhospital.domain.manager
+package com.example.aroundhospital.kakaomap
 
 import com.example.aroundhospital.LabelStyleManager
 import com.example.aroundhospital.LabelStyleType
 import com.example.aroundhospital.base.BaseCoroutineScope
-import com.example.data.api.response.Document
-import com.example.data.api.response.toKakaoMapLabelOption
+import com.example.domain.model.KakaoMapInfo
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.MapLifeCycleCallback
@@ -96,7 +95,7 @@ class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutine
         kakaoMap?.moveCamera(cameraUpdate)
     }
 
-    override fun getLabel(item: Document): Label? {
+    override fun getLabel(item: KakaoMapInfo): Label? {
         val styles =
             kakaoMap?.labelManager?.addLabelStyles(LabelStyleManager.invoke(LabelStyleType.BASIC))
 
@@ -109,7 +108,7 @@ class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutine
         }
     }
 
-    override fun addLabels(items: List<Document>) {
+    override fun addLabels(items: List<KakaoMapInfo>) {
         val styles =
             kakaoMap?.labelManager?.addLabelStyles(LabelStyleManager.invoke(LabelStyleType.BASIC))
 
