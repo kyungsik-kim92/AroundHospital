@@ -17,6 +17,7 @@ ___
 - Hilt 라이브러리 의존성 주입
 - Lottie Animation 라이브러리 사용 스플래시 화면 구성
 - Kotlin DSL 적용
+![KakaoTalk_20240507_175359113](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/eab93ef8-8e7e-40d9-9307-09dc14d1139d)
 
 
 ### 주요 라이브러리
