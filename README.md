@@ -5,7 +5,7 @@
 ___
 Clean Architecture, Kotiln, MVVM, Corountine Flow, Hilt, DataBinding, Navigation, Room, Retrofit, Lottie, Glide, ConstraintLayout
 ___  
-![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/f441c463-3ba0-4e51-aa9f-50032352f4a5)
+![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/ac21d9a8-d0cb-4229-9208-83c1460ec428)
 
 
 
