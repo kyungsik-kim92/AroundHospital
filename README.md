@@ -23,7 +23,7 @@ ___
 
   
 
-<img src="https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/a9380eb1-5048-4797-80dc-022e872df6ad" width="300" height="500" align='right'/>
+<img src="https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/a9380eb1-5048-4797-80dc-022e872df6ad" width="300" height="500"/>
 
 
 
