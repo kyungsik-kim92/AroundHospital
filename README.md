@@ -18,7 +18,7 @@ ___
 - Kotlin DSL 적용
 
 <img src="https://url/image.png](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/a9380eb1-5048-4797-80dc-022e872df6ad)" width="50" height="50"/>
-![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/a9380eb1-5048-4797-80dc-022e872df6ad)
+
 
 ### 주요 라이브러리
 ![image](https://github.com/kyungsik-kim92/ObjectDetction/assets/93589990/a0e7a2a3-343b-4f1d-86d8-324c0ec58d24)
