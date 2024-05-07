@@ -8,7 +8,7 @@ ___
 ![image](https://github.com/kyungsik-kim92/ObjectDetction/assets/93589990/7679dfe7-151b-466c-b482-23891858c963)
 
 
-<div align ='left'>
+
 ### 주요 기능
 - MVVM + Clean Architecture
 - Room 라이브러리 사용 병원 즐겨찾기 추가, 삭제 기능
@@ -20,7 +20,7 @@ ___
 - Lottie Animation 라이브러리 사용 스플래시 화면 구성
 - Kotlin DSL 적용
   
-  </div>
+
   
 
 <img src="https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/a9380eb1-5048-4797-80dc-022e872df6ad" width="300" height="500" align='right'/>
