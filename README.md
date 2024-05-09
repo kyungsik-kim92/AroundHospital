@@ -29,7 +29,7 @@ ___
 
 
 ### 주요 라이브러리
-![image](https://github.com/kyungsik-kim92/ObjectDetction/assets/93589990/a0e7a2a3-343b-4f1d-86d8-324c0ec58d24)
+![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/53e274dc-7864-47c2-baa9-d9cd0d11fd18)
 
 
 ### Project Flow
