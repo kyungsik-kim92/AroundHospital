@@ -33,7 +33,7 @@ ___
 
 
 ### Project Flow
-![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/3991cfd6-36c0-4445-87a2-cea42ff46a53)
+![image](https://github.com/kyungsik-kim92/AroundHospital/assets/93589990/842e408c-5d33-428d-b598-2138b67745eb)
 
 
 
