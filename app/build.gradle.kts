@@ -43,8 +43,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":presenter"))
 
+    implementation(project(":presentation"))
     implementation(libs.kakao.android)
     implementation(libs.androidx.appcompat)
 

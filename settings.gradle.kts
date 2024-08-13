@@ -26,4 +26,4 @@ rootProject.name = "AroundHospital"
 include(":app")
 include(":domain")
 include(":data")
-include(":presenter")
+include(":presentation")

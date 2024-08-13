@@ -111,7 +111,7 @@ class MapViewModel @Inject constructor(
 
     fun kakaoMapEvent(event: KakaoMapEvent) {
         when (event) {
-            is KakaoMapLifeCycleCallbackEvent -> processKakaMapLifecycleEvent(event)
+            is KakaoMapLifeCycleCallbackEvent -> processKakaoMapLifecycleEvent(event)
             is KakaoMapReadyCallbackEvent.Ready -> {
                 moveCurrentLocation()
             }
@@ -119,6 +119,8 @@ class MapViewModel @Inject constructor(
             is KakaoMapLabelEvent.Click -> {
                 (event.label.tag as? KakaoMapInfo)?.let {
                     checkBookmarkState(it)
+                    val cameraUpdate = CameraUpdateFactory.newCenterPosition(event.label.position)
+                    onChangedViewEvent(MapViewEvent.MoveCamera(cameraUpdate))
                     onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
                 }
             }
@@ -136,7 +138,7 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun processKakaMapLifecycleEvent(event: KakaoMapLifeCycleCallbackEvent) {
+    private fun processKakaoMapLifecycleEvent(event: KakaoMapLifeCycleCallbackEvent) {
         when (event) {
             KakaoMapLifeCycleCallbackEvent.Destroy -> {}
             is KakaoMapLifeCycleCallbackEvent.Error -> {}
