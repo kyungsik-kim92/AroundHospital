@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : BaseViewModel() {
     fun moveItem(item: KakaoMapInfo) = viewModelScope.launch {
-        onChangedViewEvent(HomeViewEvent.MoveItem(item))
+        onChangedViewEvent(HomeUiEvent.MoveItem(item))
     }
 
 }

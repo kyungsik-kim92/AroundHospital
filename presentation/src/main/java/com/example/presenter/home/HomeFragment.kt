@@ -41,7 +41,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onChangeViewEvent(event: ViewEvent) {
         when (event) {
-            is HomeViewEvent.MoveItem -> {
+            is HomeUiEvent.MoveItem -> {
                 binding.viewPager.setCurrentItem(INDEX_MAP_FRAGMENT, false)
             }
         }

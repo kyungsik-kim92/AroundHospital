@@ -2,19 +2,18 @@ package com.example.presenter.ui.map
 
 
 import com.example.domain.model.KakaoMapInfo
-import com.example.presenter.base.ViewEvent
 import com.kakao.vectormap.camera.CameraUpdate
 
-sealed interface MapViewEvent : ViewEvent {
-    object ShowProgress : MapViewEvent
-    object HideProgress : MapViewEvent
+sealed interface MapUiEvent {
+    data object ShowProgress : MapUiEvent
+    data object HideProgress : MapUiEvent
 
-    data class ShowMapPOIItemInfo(val item: KakaoMapInfo) : MapViewEvent
+    data class ShowMapPOIItemInfo(val item: KakaoMapInfo) : MapUiEvent
 
-    object HideMapPOIItemInfo : MapViewEvent
+    data object HideMapPOIItemInfo : MapUiEvent
 
-    data class MoveCamera(val cameraUpdate: CameraUpdate) : MapViewEvent
+    data class MoveCamera(val cameraUpdate: CameraUpdate) : MapUiEvent
 
-    data class GetHospitals(val list: List<KakaoMapInfo>) : MapViewEvent
+    data class GetHospitals(val list: List<KakaoMapInfo>) : MapUiEvent
 
 }

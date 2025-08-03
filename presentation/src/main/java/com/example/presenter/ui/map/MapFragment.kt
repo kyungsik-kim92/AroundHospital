@@ -11,7 +11,7 @@ import com.example.presenter.databinding.FragmentMapBinding
 import com.example.presenter.ext.hidePOIInfoContainer
 import com.example.presenter.ext.showPOIInfoContainer
 import com.example.presenter.ext.showToast
-import com.example.presenter.home.HomeViewEvent
+import com.example.presenter.home.HomeUiEvent
 import com.example.presenter.home.HomeViewModel
 import com.example.presenter.kakaomap.KakaoMapManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,15 +41,15 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     override fun onChangeViewEvent(event: ViewEvent) {
         when (event) {
-            is MapViewEvent.ShowProgress -> {
+            is MapUiEvent.ShowProgress -> {
                 binding.progress.isVisible = true
             }
 
-            is MapViewEvent.HideProgress -> {
+            is MapUiEvent.HideProgress -> {
                 binding.progress.isVisible = false
             }
 
-            is MapViewEvent.ShowMapPOIItemInfo -> {
+            is MapUiEvent.ShowMapPOIItemInfo -> {
                 with(binding) {
                     fabCurrentLocation.isVisible = false
                     viewMapInfo.item = event.item
@@ -57,22 +57,22 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
                 }
             }
 
-            is MapViewEvent.HideMapPOIItemInfo -> {
+            is MapUiEvent.HideMapPOIItemInfo -> {
                 with(binding) {
                     fabCurrentLocation.isVisible = true
                     viewMapInfo.root.hidePOIInfoContainer(requireContext())
                 }
             }
 
-            is MapViewEvent.MoveCamera -> {
+            is MapUiEvent.MoveCamera -> {
                 kakaoMapManager.moveCamera(event.cameraUpdate)
             }
 
-            is MapViewEvent.GetHospitals -> {
+            is MapUiEvent.GetHospitals -> {
                 kakaoMapManager.addLabels(event.list)
             }
 
-            is HomeViewEvent.MoveItem -> {
+            is HomeUiEvent.MoveItem -> {
                 viewModel.moveItem(kakaoMapManager.getLabel(event.item))
             }
 

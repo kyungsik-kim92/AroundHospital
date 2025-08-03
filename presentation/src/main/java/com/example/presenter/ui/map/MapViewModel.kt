@@ -66,11 +66,11 @@ class MapViewModel @Inject constructor(
         getCurrentLocationUseCase().onEach { result ->
             when (result) {
                 is Result.Error -> Unit
-                Result.Loading -> onChangedViewEvent(MapViewEvent.ShowProgress)
+                Result.Loading -> onChangedViewEvent(MapUiEvent.ShowProgress)
                 is Result.Success -> {
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(result.data.toLatLng())
-                    onChangedViewEvent(MapViewEvent.MoveCamera(cameraUpdate))
-                    onChangedViewEvent(MapViewEvent.HideProgress)
+                    onChangedViewEvent(MapUiEvent.MoveCamera(cameraUpdate))
+                    onChangedViewEvent(MapUiEvent.HideProgress)
 
                 }
             }
@@ -85,7 +85,7 @@ class MapViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 Result.Loading -> {
-                    onChangedViewEvent(MapViewEvent.ShowProgress)
+                    onChangedViewEvent(MapUiEvent.ShowProgress)
                 }
 
                 is Result.Error -> {
@@ -93,8 +93,8 @@ class MapViewModel @Inject constructor(
                 }
 
                 is Result.Success -> {
-                    onChangedViewEvent(MapViewEvent.GetHospitals(result.data.documents))
-                    onChangedViewEvent(MapViewEvent.HideProgress)
+                    onChangedViewEvent(MapUiEvent.GetHospitals(result.data.documents))
+                    onChangedViewEvent(MapUiEvent.HideProgress)
                 }
             }
         }.launchIn(viewModelScope)
@@ -120,8 +120,8 @@ class MapViewModel @Inject constructor(
                 (event.label.tag as? KakaoMapInfo)?.let {
                     checkBookmarkState(it)
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(event.label.position)
-                    onChangedViewEvent(MapViewEvent.MoveCamera(cameraUpdate))
-                    onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
+                    onChangedViewEvent(MapUiEvent.MoveCamera(cameraUpdate))
+                    onChangedViewEvent(MapUiEvent.ShowMapPOIItemInfo(it))
                 }
             }
 
@@ -133,7 +133,7 @@ class MapViewModel @Inject constructor(
 
             is KakaoMapCameraEvent.MoveStart -> {
                 isBookmarkStateFlow.value = false
-                onChangedViewEvent(MapViewEvent.HideMapPOIItemInfo)
+                onChangedViewEvent(MapUiEvent.HideMapPOIItemInfo)
             }
         }
     }
@@ -157,7 +157,7 @@ class MapViewModel @Inject constructor(
     fun moveItem(item: Label?) {
         (item?.tag as? KakaoMapInfo)?.let {
             checkBookmarkState(it)
-            onChangedViewEvent(MapViewEvent.ShowMapPOIItemInfo(it))
+            onChangedViewEvent(MapUiEvent.ShowMapPOIItemInfo(it))
         }
     }
 

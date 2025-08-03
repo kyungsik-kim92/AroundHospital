@@ -21,9 +21,9 @@ class SplashViewModel @Inject constructor(private val app: Application) : BaseVi
                 val permissionApproved =
                     app.applicationContext.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 if (permissionApproved) {
-                    onChangedViewState(SplashViewState.RouteMap)
+                    onChangedViewState(SplashUiState.RouteMap)
                 } else {
-                    onChangedViewState(SplashViewState.RequestPermission)
+                    onChangedViewState(SplashUiState.RequestPermission)
                 }
             }
 

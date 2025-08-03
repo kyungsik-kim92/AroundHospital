@@ -21,7 +21,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
         ActivityResultContracts.RequestPermission(),
     ) { isGranted ->
         if (isGranted) {
-            onChangedViewState(SplashViewState.RouteMap)
+            onChangedViewState(SplashUiState.RouteMap)
         } else {
             onChangeViewEvent(ViewEvent.ShowToast("위치 권한을 허용해주세요."))
         }
@@ -33,8 +33,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
 
     override fun onChangedViewState(state: ViewState) {
         when (state) {
-            is SplashViewState.RouteMap -> routeHomeFragment()
-            is SplashViewState.RequestPermission -> {
+            is SplashUiState.RouteMap -> routeHomeFragment()
+            is SplashUiState.RequestPermission -> {
                 permissionResultLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
