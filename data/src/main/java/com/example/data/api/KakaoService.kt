@@ -27,7 +27,6 @@ interface KakaoService {
 
         private const val HOSPITAL_GROUP_CODE = "HP8"
         private const val BASE_URL = "https://dapi.kakao.com/"
-        private const val API_KEY = "a9c9b825ab60749e299b375dc7b313e5"
+        private const val API_KEY = "fd897594a804806f05d3af6e80b989d9"
     }
-
 }
