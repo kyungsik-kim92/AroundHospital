@@ -1,5 +1,6 @@
 package com.example.presenter.ui.map
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.KakaoMapInfo
 import com.example.domain.usecase.DeleteKakaoBookmarkUseCase
@@ -8,7 +9,6 @@ import com.example.domain.usecase.GetHospitalsUseCase
 import com.example.domain.usecase.GetKakaoBookmarkListUseCase
 import com.example.domain.usecase.InsertKakaoBookmarkUseCase
 import com.example.domain.util.ext.Result
-import com.example.presenter.base.BaseViewModel
 import com.example.presenter.kakaomap.KakaoMapCameraEvent
 import com.example.presenter.kakaomap.KakaoMapEvent
 import com.example.presenter.kakaomap.KakaoMapLabelEvent
@@ -22,8 +22,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -43,13 +49,23 @@ class MapViewModel @Inject constructor(
     private val getKakaoBookmarkListUseCase: GetKakaoBookmarkListUseCase,
     private val insertKakaoBookmarkUseCase: InsertKakaoBookmarkUseCase,
     private val deleteKakaoBookmarkUseCase: DeleteKakaoBookmarkUseCase
-) : BaseViewModel() {
+) : ViewModel() {
+    private var isLabelClick = false
 
-    val isBookmarkStateFlow = MutableStateFlow(false)
+    private val _uiState = MutableStateFlow(MapUiState())
+    val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
-    private val isCheckBookmark: (KakaoMapInfo) -> Flow<Boolean> = { document ->
-        getKakaoBookmarkListUseCase().map {
-            it.any { bookmark -> bookmark.id == document.id }
+    private val _uiEvent = MutableSharedFlow<MapUiEvent>()
+    val uiEvent: SharedFlow<MapUiEvent> = _uiEvent.asSharedFlow()
+
+    private val _isBookmark = MutableStateFlow(false)
+    val isBookmarkStateFlow: StateFlow<Boolean> = _isBookmark.asStateFlow()
+
+    private fun isCheckBookmark(document: KakaoMapInfo): Flow<Boolean> {
+        return getKakaoBookmarkListUseCase().map { bookmarkList ->
+            bookmarkList.any { bookmark ->
+                bookmark.id == document.id
+            }
         }
     }
 
@@ -59,18 +75,24 @@ class MapViewModel @Inject constructor(
     init {
         mapCenterChannel.receiveAsFlow().debounce(SEARCH_DEBOUNCE_TIME).map(::search)
             .launchIn(viewModelScope)
-
     }
 
     fun moveCurrentLocation() {
         getCurrentLocationUseCase().onEach { result ->
             when (result) {
-                is Result.Error -> Unit
-                Result.Loading -> onChangedViewEvent(MapUiEvent.ShowProgress)
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(isProgressVisible = false)
+                }
+
+                Result.Loading -> {
+                    _uiState.value = _uiState.value.copy(isProgressVisible = true)
+                }
+
                 is Result.Success -> {
                     val cameraUpdate = CameraUpdateFactory.newCenterPosition(result.data.toLatLng())
-                    onChangedViewEvent(MapUiEvent.MoveCamera(cameraUpdate))
-                    onChangedViewEvent(MapUiEvent.HideProgress)
+                    viewModelScope.launch {
+                        _uiEvent.emit(MapUiEvent.MoveCamera(cameraUpdate))
+                    }
 
                 }
             }
@@ -85,16 +107,18 @@ class MapViewModel @Inject constructor(
         ).onEach { result ->
             when (result) {
                 Result.Loading -> {
-                    onChangedViewEvent(MapUiEvent.ShowProgress)
+                    _uiState.value = _uiState.value.copy(isProgressVisible = true)
                 }
 
                 is Result.Error -> {
-
+                    _uiState.value = _uiState.value.copy(isProgressVisible = false)
                 }
 
                 is Result.Success -> {
-                    onChangedViewEvent(MapUiEvent.GetHospitals(result.data.documents))
-                    onChangedViewEvent(MapUiEvent.HideProgress)
+                    _uiState.value = _uiState.value.copy(isProgressVisible = false)
+                    viewModelScope.launch {
+                        _uiEvent.emit(MapUiEvent.GetHospitals(result.data.documents))
+                    }
                 }
             }
         }.launchIn(viewModelScope)
@@ -117,23 +141,36 @@ class MapViewModel @Inject constructor(
             }
 
             is KakaoMapLabelEvent.Click -> {
-                (event.label.tag as? KakaoMapInfo)?.let {
-                    checkBookmarkState(it)
-                    val cameraUpdate = CameraUpdateFactory.newCenterPosition(event.label.position)
-                    onChangedViewEvent(MapUiEvent.MoveCamera(cameraUpdate))
-                    onChangedViewEvent(MapUiEvent.ShowMapPOIItemInfo(it))
+                (event.label.tag as? KakaoMapInfo)?.let { item ->
+                    isLabelClick = true
+                    checkBookmarkState(item)
+                    val cameraUpdate =
+                        CameraUpdateFactory.newCenterPosition(event.label.position)
+                    viewModelScope.launch {
+                        _uiEvent.emit(MapUiEvent.MoveCamera(cameraUpdate))
+                        delay(200L)
+                        _uiEvent.emit(MapUiEvent.ShowPOIItem(item))
+                    }
                 }
             }
 
             is KakaoMapCameraEvent.MoveEnd -> {
+                isLabelClick = false
                 flowOf(event.cameraPosition.position).filterNotNull().map {
                     mapCenterChannel.trySend(it)
                 }.launchIn(viewModelScope)
             }
 
             is KakaoMapCameraEvent.MoveStart -> {
-                isBookmarkStateFlow.value = false
-                onChangedViewEvent(MapUiEvent.HideMapPOIItemInfo)
+                if (!isLabelClick && _uiState.value.isMapInfoVisible) {
+                    _uiState.value = _uiState.value.copy(
+                        isMapInfoVisible = false,
+                        selectedItem = null
+                    )
+                    viewModelScope.launch {
+                        _uiEvent.emit(MapUiEvent.HidePOIItem)
+                    }
+                }
             }
         }
     }
@@ -150,15 +187,29 @@ class MapViewModel @Inject constructor(
 
     private fun checkBookmarkState(item: KakaoMapInfo) {
         isCheckBookmark(item).onEach {
-            isBookmarkStateFlow.value = it
+            _isBookmark.value = it
         }.launchIn(viewModelScope)
     }
 
     fun moveItem(item: Label?) {
-        (item?.tag as? KakaoMapInfo)?.let {
-            checkBookmarkState(it)
-            onChangedViewEvent(MapUiEvent.ShowMapPOIItemInfo(it))
+        (item?.tag as? KakaoMapInfo)?.let { mapInfo ->
+            checkBookmarkState(mapInfo)
+            _uiState.value = _uiState.value.copy(
+                isFabVisible = false,
+                isMapInfoVisible = true,
+                selectedItem = mapInfo
+            )
+            viewModelScope.launch {
+                _uiEvent.emit(MapUiEvent.ShowPOIItem(mapInfo))
+            }
         }
+    }
+
+    fun updateMapInfoState(isVisible: Boolean, item: KakaoMapInfo?) {
+        _uiState.value = _uiState.value.copy(
+            isMapInfoVisible = isVisible,
+            selectedItem = item
+        )
     }
 
     companion object {
