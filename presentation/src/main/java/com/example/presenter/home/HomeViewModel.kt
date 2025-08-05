@@ -16,7 +16,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private val _uiEvent = MutableSharedFlow<HomeUiEvent>()
     val uiEvent: SharedFlow<HomeUiEvent> = _uiEvent.asSharedFlow()
 
-    fun moveToMapWithItem(item: KakaoMapInfo) {
+    fun moveItem(item: KakaoMapInfo) {
         viewModelScope.launch {
             _uiEvent.emit(HomeUiEvent.MoveToMap(item))
         }

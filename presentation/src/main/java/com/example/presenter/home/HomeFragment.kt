@@ -38,6 +38,7 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         return binding.root
     }
 
@@ -86,6 +87,6 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val INDEX_MAP_FRAGMENT = 0
-    }
 
+    }
 }
