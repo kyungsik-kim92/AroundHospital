@@ -2,7 +2,6 @@ package com.example.presenter.kakaomap
 
 
 import com.example.domain.model.KakaoMapInfo
-import com.example.presenter.base.BaseCoroutineScope
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.MapLifeCycleCallback
@@ -11,15 +10,11 @@ import com.kakao.vectormap.camera.CameraUpdate
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.onClosed
-import kotlinx.coroutines.channels.onFailure
-import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutineScope() {
+class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager {
 
     private var mapView: MapView? = null
     private var kakaoMap: KakaoMap? = null
@@ -31,7 +26,7 @@ class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutine
     private val kakaoMapReadyCallbackImpl = object : KakaoMapReadyCallback() {
         override fun onMapReady(kakaoMap: KakaoMap) {
             this@KakaoMapManagerImpl.kakaoMap = kakaoMap
-            this@KakaoMapManagerImpl.kakaoMap?.setOnLabelClickListener(kakaoMapLableClickListener)
+            this@KakaoMapManagerImpl.kakaoMap?.setOnLabelClickListener(kakaoMapLabelClickListener)
             this@KakaoMapManagerImpl.kakaoMap?.setOnCameraMoveStartListener(
                 kakaoMapCameraMoveStartListener
             )
@@ -41,45 +36,46 @@ class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutine
             this@KakaoMapManagerImpl.kakaoMap?.labelManager?.let {
                 labelLayer = it.layer
             }
-            onChagnedViewEvent(KakaoMapReadyCallbackEvent.Ready(kakaoMap))
+            sendEvent(KakaoMapReadyCallbackEvent.Ready(kakaoMap))
         }
     }
 
-    private val kakaoMapLableClickListener =
+    private val kakaoMapLabelClickListener =
         KakaoMap.OnLabelClickListener { kakaoMap, layer, label ->
-            onChagnedViewEvent(KakaoMapLabelEvent.Click(kakaoMap, layer, label))
+            sendEvent(KakaoMapLabelEvent.Click(kakaoMap, layer, label))
+            true
         }
 
     private val kakaoMapLifeCycleCallbackImpl = object : MapLifeCycleCallback() {
         override fun onMapResumed() {
             super.onMapResumed()
-            onChagnedViewEvent(KakaoMapLifeCycleCallbackEvent.Resumed)
+            sendEvent(KakaoMapLifeCycleCallbackEvent.Resumed)
         }
 
         override fun onMapPaused() {
             super.onMapPaused()
-            onChagnedViewEvent(KakaoMapLifeCycleCallbackEvent.Paused)
+            sendEvent(KakaoMapLifeCycleCallbackEvent.Paused)
         }
 
         override fun onMapDestroy() {
-            onChagnedViewEvent(KakaoMapLifeCycleCallbackEvent.Destroy)
+            sendEvent(KakaoMapLifeCycleCallbackEvent.Destroy)
             _kakaoMapEventChannel.close()
         }
 
         override fun onMapError(error: Exception?) {
-            onChagnedViewEvent(KakaoMapLifeCycleCallbackEvent.Error(error))
+            sendEvent(KakaoMapLifeCycleCallbackEvent.Error(error))
         }
     }
 
     private val kakaoMapCameraMoveEndListener =
         KakaoMap.OnCameraMoveEndListener { kakaoMap, cameraPosition, gestureType ->
-            onChagnedViewEvent(KakaoMapCameraEvent.MoveEnd(kakaoMap, cameraPosition, gestureType))
+            sendEvent(KakaoMapCameraEvent.MoveEnd(kakaoMap, cameraPosition, gestureType))
         }
 
 
     private val kakaoMapCameraMoveStartListener =
         KakaoMap.OnCameraMoveStartListener { kakaoMap, gestureType ->
-            onChagnedViewEvent(KakaoMapCameraEvent.MoveStart(kakaoMap, gestureType))
+            sendEvent(KakaoMapCameraEvent.MoveStart(kakaoMap, gestureType))
         }
 
     override fun init(mapView: MapView) {
@@ -116,16 +112,7 @@ class KakaoMapManagerImpl @Inject constructor() : KakaoMapManager, BaseCoroutine
     }
 
 
-    private fun onChagnedViewEvent(event: KakaoMapEvent) = launch {
-        _kakaoMapEventChannel
-            .trySend(event)
-            .onSuccess { }
-            .onFailure { it?.let(::handleException) }
-            .onClosed { it?.let(::handleException) }
-    }
-
-    override fun handleException(exception: Throwable) {
-        super.handleException(exception)
-        onChagnedViewEvent(KakaoMapLifeCycleCallbackEvent.Error(exception as? Exception))
+    private fun sendEvent(event: KakaoMapEvent) {
+        _kakaoMapEventChannel.trySend(event)
     }
 }

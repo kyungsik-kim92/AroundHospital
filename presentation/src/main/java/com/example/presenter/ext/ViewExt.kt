@@ -3,16 +3,11 @@ package com.example.presenter.ext
 import android.content.Context
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.presenter.R
 import com.example.presenter.ui.splash.SplashFragmentDirections
-
-
-fun Fragment.showToast(message: String) {
-    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-}
+import androidx.core.view.isGone
 
 
 fun Fragment.routeHomeFragment() {
@@ -20,7 +15,7 @@ fun Fragment.routeHomeFragment() {
 }
 
 fun View.hidePOIInfoContainer(context: Context) {
-    if (this.visibility == View.GONE) return
+    if (this.isGone) return
     this.visibility = View.GONE
     this.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_down))
 }
