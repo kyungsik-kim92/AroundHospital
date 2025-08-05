@@ -6,7 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.airbnb.lottie.LottieAnimationView
 
 @BindingAdapter("onLottieAnimateState")
-fun LottieAnimationView.onLottieAnimateState(state: Function1<LottieAnimateState, Unit>?) {
+fun LottieAnimationView.onLottieAnimateState(state: ((LottieAnimateState) -> Unit)?) {
     this.addAnimatorListener(object : Animator.AnimatorListener {
         override fun onAnimationStart(animation: Animator) {
             state?.invoke(LottieAnimateState.Start)
@@ -28,10 +28,10 @@ fun LottieAnimationView.onLottieAnimateState(state: Function1<LottieAnimateState
 
 
 sealed interface LottieAnimateState {
-    object Start : LottieAnimateState
-    object End : LottieAnimateState
-    object Cancel : LottieAnimateState
-    object Repeat : LottieAnimateState
+    data object Start : LottieAnimateState
+    data object End : LottieAnimateState
+    data object Cancel : LottieAnimateState
+    data object Repeat : LottieAnimateState
 }
 
 
