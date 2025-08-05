@@ -167,9 +167,7 @@ class MapViewModel @Inject constructor(
                         isMapInfoVisible = false,
                         selectedItem = null
                     )
-                    viewModelScope.launch {
-                        _uiEvent.emit(MapUiEvent.HidePOIItem)
-                    }
+                    _uiEvent.tryEmit(MapUiEvent.HidePOIItem)
                 }
             }
         }
