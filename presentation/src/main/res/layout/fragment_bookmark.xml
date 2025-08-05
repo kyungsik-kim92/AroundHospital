@@ -16,7 +16,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="즐겨찾기 항목이 비어있습니다."
-            isVisible="@{!viewModel.isVisibleListStateFlow}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            isVisible="@{viewModel.isVisibleListStateFlow}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

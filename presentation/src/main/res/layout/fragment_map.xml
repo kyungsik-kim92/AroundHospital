@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.presenter.ui.map.MapViewModel" />
@@ -17,7 +18,7 @@
         <com.kakao.vectormap.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,6 +30,7 @@
             android:onClick="@{()->viewModel.moveCurrentLocation()}"
             android:src="@drawable/ic_location"
             app:elevation="5dp"
+            app:isVisible="@{viewModel.uiState.isFabVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1"
@@ -40,7 +42,7 @@
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            app:isVisible="@{viewModel.uiState.isProgressVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +54,7 @@
             layout="@layout/view_map_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            app:isVisible="@{viewModel.uiState.isMapInfoVisible}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

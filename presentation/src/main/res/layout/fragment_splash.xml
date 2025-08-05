@@ -15,7 +15,7 @@
 
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottie_splash"
+            android:id="@+id/splash"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             onLottieAnimateState="@{viewModel.animateState}"
