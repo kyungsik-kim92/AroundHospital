@@ -159,9 +159,7 @@ class MapViewModel @Inject constructor(
                 flowOf(event.cameraPosition.position).filterNotNull().map {
                     mapCenterChannel.trySend(it)
                 }.launchIn(viewModelScope)
-            }
 
-            is KakaoMapCameraEvent.MoveStart -> {
                 if (!isLabelClick && _uiState.value.isMapInfoVisible) {
                     _uiState.value = _uiState.value.copy(
                         isMapInfoVisible = false,
@@ -170,6 +168,8 @@ class MapViewModel @Inject constructor(
                     _uiEvent.tryEmit(MapUiEvent.HidePOIItem)
                 }
             }
+
+            is KakaoMapCameraEvent.MoveStart -> {}
         }
     }
 
